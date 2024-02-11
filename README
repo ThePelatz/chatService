@@ -1,0 +1,10 @@
+javac -cp "/home/m/martinzo/Introduction Distribuited Systems/firstExample" ChatServer.java
+
+
+pkill -f "rmiregistry"
+
+rmiregistry &
+
+java ChatServer
+
+java ChatClient localhost
