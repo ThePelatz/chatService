@@ -8,3 +8,7 @@ rmiregistry &
 java ChatServer
 
 java ChatClient localhost
+
+javac -cp "lib/*" -d bin src/*.java 
+
+export CLASSPATH=bin
