@@ -1,4 +1,3 @@
-import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.*;
 
@@ -7,9 +6,8 @@ public class ChatServer {
     public static void main(String[] args) {
 
         try {
-            // Create a Hello remote object
-            ChatImpl h = new ChatImpl("Hello world !");
-            Chat h_stub = (Chat) UnicastRemoteObject.exportObject(h, 0);
+            GroupChatServerImpl h = new GroupChatServerImpl();
+            GroupChatServer h_stub = (GroupChatServer) UnicastRemoteObject.exportObject(h, 0);
 
             // Register the remote object in RMI registry with a given identifier
             Registry registry = LocateRegistry.getRegistry();

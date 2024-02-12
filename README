@@ -1,14 +1,9 @@
-javac -cp "/home/m/martinzo/Introduction Distribuited Systems/firstExample" ChatServer.java
+USER GUIDE:
 
-
-pkill -f "rmiregistry"
-
-rmiregistry &
-
-java ChatServer
-
-java ChatClient localhost
-
-javac -cp "lib/*" -d bin src/*.java 
-
-export CLASSPATH=bin
+1. Go to the folder "chatService"
+2. Compile all the java files with: javac -d bin src/*.java
+3. Run the rmiregistry: rmiregistry & 
+4. Run the server: java -cp bin ChatServer
+5. Open new terminals for the clients
+6. Run clients with this command: java -cp bin ChatClient localhost
+6. Chat and enjoy!

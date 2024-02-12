@@ -1,8 +1,25 @@
 import java.rmi.*;
 import java.rmi.registry.*;
-import java.util.List;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 
-public class ChatClient {
+public class ChatClient extends UnicastRemoteObject implements ClientCallback {
+
+    private GroupChatServer messageService;
+
+    protected ChatClient(GroupChatServer messageService) throws RemoteException {
+        super();
+        this.messageService = messageService;
+        messageService.registerClientCallback(this);
+        System.out.println("** WELCOME TO THE CHAT! **\n");
+    }
+
+    public void receiveMessage(String sender, String body) throws RemoteException {
+
+        System.out.println("[ " + sender +  " ]: " + body);
+
+    }
+
     public static void main(String[] args) {
         try {
             if (args.length < 1) {
@@ -11,26 +28,26 @@ public class ChatClient {
             }
 
             String host = args[0];
+
+            // Read user input
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Type your username");
+            String userName = scan.nextLine();  
             
             // Get remote object reference
             Registry registry = LocateRegistry.getRegistry(host);
-            Chat h = (Chat) registry.lookup("ChatService");
+            GroupChatServer h = (GroupChatServer) registry.lookup("ChatService");
+            ChatClient client = new ChatClient(h);
 
+        
             // Remote method invocation
-            //String res = h.sayHello();
-
-            h.sendMessage("Messaggio 1");
-            h.sendMessage("Messaggio 2");
-
-            h.printMessages();
-
-            List<String> history = h.getHistory();
-
-            for (String str : history) {
-                System.out.println(str);
+            while(true){
+                
+                String message = scan.nextLine();  // Read user message
+                h.sendMessage(userName,message);
+                
             }
-
-            //System.out.println(res);
+        
 
         } catch (Exception e) {
             System.err.println("Error on client: " + e);
