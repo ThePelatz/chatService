@@ -2,6 +2,7 @@ import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
+import java.util.List;
 
 public class ChatClient extends UnicastRemoteObject implements ClientCallback {
 
@@ -11,7 +12,29 @@ public class ChatClient extends UnicastRemoteObject implements ClientCallback {
         super();
         this.messageService = messageService;
         messageService.registerClientCallback(this);
-        System.out.println("** WELCOME TO THE CHAT! **\n");
+
+        //we automatically receive the previous messages in history right before typing any other messages 
+        System.out.println("\n** OLD MESSAGES:  **\n");
+        
+        System.out.println("--------------------------------\n");
+        
+        List<String> historyMessages = messageService.printHistory();
+
+        if (historyMessages.isEmpty()) {
+            
+            System.out.println("No messages sent yet");
+
+        } else {
+            // print the content of the file of old messages
+            for (String line : historyMessages) {
+                System.out.println(line);
+            }
+        }
+
+        System.out.println("\n--------------------------------");
+
+
+        System.out.println("\n \n** WELCOME TO THE CHAT! **\n");
     }
 
     public void receiveMessage(String sender, String body) throws RemoteException {
