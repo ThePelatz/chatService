@@ -1,9 +1,9 @@
 USER GUIDE:
 
 1. Go to the folder "chatService"
-2. Compile all the java files with: javac -d bin src/*.java
+2. Compile all the java files with: javac *.java
 3. Run the rmiregistry: rmiregistry & 
-4. Run the server: java -cp bin ChatServer
+4. Run the server: java ChatServer
 5. Open new terminals for the clients
-6. Run clients with this command: java -cp bin ChatClient localhost
+6. Run clients with this command: java ChatClient localhost
 6. Chat and enjoy!
