@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 public class ChatClient extends UnicastRemoteObject implements ClientCallback {
 
+    public GroupChatServer getMessageService() {
+        return messageService;
+    }
+
     private GroupChatServer messageService;
 
     protected ChatClient(GroupChatServer messageService) throws RemoteException {
@@ -31,7 +35,7 @@ public class ChatClient extends UnicastRemoteObject implements ClientCallback {
 
             // Read user input
             Scanner scan = new Scanner(System.in);
-            System.out.println("Type your username");
+            System.out.println("Type your username or type leave to leave the chat");
             String userName = scan.nextLine();  
             
             // Get remote object reference
@@ -44,7 +48,13 @@ public class ChatClient extends UnicastRemoteObject implements ClientCallback {
             while(true){
                 
                 String message = scan.nextLine();  // Read user message
-                h.sendMessage(userName,message);
+                if(message.equalsIgnoreCase("leave")){
+                    h.unregisterClientCallback(client);
+                    h.sendMessage(userName, "Leave the chat server");// Send message to other clients
+                    System.exit(0); // Exit
+                } else {
+                    h.sendMessage(userName,message);
+                }
                 
             }
         

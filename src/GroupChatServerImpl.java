@@ -28,9 +28,9 @@ public class GroupChatServerImpl implements GroupChatServer {
         clients.add(callback);
     }
 
-    /*
+    
     public void unregisterClientCallback(ClientCallback callback) throws RemoteException {
         clients.remove(callback);
-    } */
+    } 
 
 }

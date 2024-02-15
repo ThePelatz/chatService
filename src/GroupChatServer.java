@@ -7,7 +7,7 @@ void sendMessage(String sender,String body) throws RemoteException;
 
 void registerClientCallback(ClientCallback callback) throws RemoteException;
 
-//void unregisterClientCallback(ClientCallback callback) throws RemoteException;
+void unregisterClientCallback(ClientCallback callback) throws RemoteException;
 
 
 }
