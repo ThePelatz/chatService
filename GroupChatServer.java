@@ -10,7 +10,7 @@ List<String> printHistory() throws RemoteException;
 
 void registerClientCallback(ClientCallback callback) throws RemoteException;
 
-//void unregisterClientCallback(ClientCallback callback) throws RemoteException;
+void unregisterClientCallback(ClientCallback callback) throws RemoteException;
 
 
 }

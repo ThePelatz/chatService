@@ -14,7 +14,7 @@ public class ChatClient extends UnicastRemoteObject implements ClientCallback {
         messageService.registerClientCallback(this);
 
         //we automatically receive the previous messages in history right before typing any other messages 
-        System.out.println("\n** OLD MESSAGES:  **\n");
+        System.out.println("\n** MESSAGE HYSTORY:  **\n");
         
         System.out.println("--------------------------------\n");
         
@@ -63,11 +63,19 @@ public class ChatClient extends UnicastRemoteObject implements ClientCallback {
             ChatClient client = new ChatClient(h);
 
         
-            // Remote method invocation
-            while(true){
+             // Remote method invocation
+             while(true){
                 
                 String message = scan.nextLine();  // Read user message
-                h.sendMessage(userName,message);
+                if(message.equalsIgnoreCase("leave")){
+                    
+                    h.sendMessage(userName, "Leave the chat server");// Send message to other clients
+                    h.unregisterClientCallback(client);
+                    
+                    System.exit(0); // Exit
+                } else {
+                    h.sendMessage(userName,message);
+                }
                 
             }
         

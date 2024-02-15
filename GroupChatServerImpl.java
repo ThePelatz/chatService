@@ -25,12 +25,22 @@ public class GroupChatServerImpl implements GroupChatServer {
         //saves the message in the history file
         saveMessage(sender, body);
 
+        ClientCallback unsub = null;
 
-        for (ClientCallback client : clients) {
-            
-            //the server forwards the message to all the clients, even to the sender of that message
-            client.receiveMessage(sender, body);
+        try{
+            for (ClientCallback client : clients) {
+                
+                unsub = client;
+                //the server forwards the message to all the clients, even to the sender of that message
+                client.receiveMessage(sender, body);
+
+            }
+
+        } catch (java.rmi.RemoteException e) {
+            unregisterClientCallback(unsub);
+            System.out.println("Someone has left the chat");
         }
+
     }
 
     public List<String> printHistory(){
@@ -84,9 +94,9 @@ public class GroupChatServerImpl implements GroupChatServer {
         clients.add(callback);
     }
 
-    /*
+    
     public void unregisterClientCallback(ClientCallback callback) throws RemoteException {
         clients.remove(callback);
-    } */
+    }
 
 }
