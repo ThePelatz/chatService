@@ -25,19 +25,17 @@ public class GroupChatServerImpl implements GroupChatServer {
         //saves the message in the history file
         saveMessage(sender, body);
 
-        ClientCallback unsub = null;
+        int i = 0;
 
         try{
-            for (ClientCallback client : clients) {
-                
-                unsub = client;
-                //the server forwards the message to all the clients, even to the sender of that message
+            for (i = 0; i < clients.size(); i++) {
+                ClientCallback client = clients.get(i);
+                //The server forwards the message to all the clients, even to the sender of that message
                 client.receiveMessage(sender, body);
-
             }
-
         } catch (java.rmi.RemoteException e) {
-            unregisterClientCallback(unsub);
+            //This case usually occurs when a client is forced to be closed. Here we remove the reference to that client from the list
+            unregisterClientCallback(clients.get(i));
             System.out.println("Someone has left the chat");
         }
 
