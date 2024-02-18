@@ -3,86 +3,55 @@ import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ChatClient extends UnicastRemoteObject implements ClientCallback {
 
     private GroupChatServer messageService;
+    private String userName;   
+    private List<String> newMessages = new ArrayList<String>();;
 
     protected ChatClient(GroupChatServer messageService) throws RemoteException {
         super();
-        this.messageService = messageService;
-        messageService.registerClientCallback(this);
+            this.messageService = messageService;
+            this.messageService.registerClientCallback(this);
+            messageService.registerClientCallback(this);
+        
+    }
 
-        //we automatically receive the previous messages in history right before typing any other messages 
-        System.out.println("\n** MESSAGE HYSTORY:  **\n");
-        
-        System.out.println("--------------------------------\n");
-        
+    public void leaveChat() {
+        System.exit(0);
+    }
+    public List<String> getHistoryMessages()throws RemoteException{
         List<String> historyMessages = messageService.printHistory();
 
         if (historyMessages.isEmpty()) {
-            
-            System.out.println("No messages sent yet");
-
+            historyMessages.add("No messages sent yet");
         } else {
-            // print the content of the file of old messages
-            for (String line : historyMessages) {
-                System.out.println(line);
-            }
+            historyMessages.add("\n--------** MESSAGE HYSTORY**-------\n");
         }
+        return historyMessages;
+    }
 
-        System.out.println("\n--------------------------------");
+    public void sendMessage(String body) throws RemoteException {
+        messageService.sendMessage(this.userName, body);
+    }
 
-
-        System.out.println("\n \n** WELCOME TO THE CHAT! **\n");
+    public void setUsername(String username) throws RemoteException {
+        this.userName = username;   
     }
 
     public void receiveMessage(String sender, String body) throws RemoteException {
-
-        System.out.println("[ " + sender +  " ]: " + body);
+        
+        newMessages.add("[ " + sender +  " ]: " + body) ;
 
     }
 
+    public List<String> getNewMessages() {
+        return newMessages;
+    }
+
     public static void main(String[] args) {
-        try {
-            if (args.length < 1) {
-                System.out.println("Usage: java ChatService <rmiregistry host>");
-                return;
-            }
-
-            String host = args[0];
-
-            // Read user input
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Type your username");
-            String userName = scan.nextLine();  
-            
-            // Get remote object reference
-            Registry registry = LocateRegistry.getRegistry(host);
-            GroupChatServer h = (GroupChatServer) registry.lookup("ChatService");
-            ChatClient client = new ChatClient(h);
-
         
-             // Remote method invocation
-             while(true){
-                
-                String message = scan.nextLine();  // Read user message
-                if(message.equalsIgnoreCase("leave")){
-                    
-                    h.sendMessage(userName, "Leave the chat server");// Send message to other clients
-                    h.unregisterClientCallback(client);
-                    
-                    System.exit(0); // Exit
-                } else {
-                    h.sendMessage(userName,message);
-                }
-                
-            }
-        
-
-        } catch (Exception e) {
-            System.err.println("Error on client: " + e);
-            e.printStackTrace();
-        }
     }
 }
